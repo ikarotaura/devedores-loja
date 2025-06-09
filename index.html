@@ -308,17 +308,23 @@
       }
 
       const devedores = carregarDevedores();
-      const devedorExistente = devedores.find(dev => dev.nome.toLowerCase() === nome.toLowerCase());
+     const devedorExistente = devedores.find(dev => dev.nome.toLowerCase() === nome.toLowerCase());
 
-      if (devedorExistente) {
-        devedorExistente.valor += valor;
-      } else {
-        if (valor < 0) {
-          alert("Não é possível registrar valor negativo para um novo devedor.");
-          return;
-        }
-        devedores.push({ nome, valor, numero, produtos: [] });
-      }
+if (devedorExistente) {
+  devedorExistente.valor += valor;
+
+  // Se o número digitado for válido e diferente do salvo, atualiza (opcional)
+  if (/^\d{10,11}$/.test(numero) && numero !== devedorExistente.numero) {
+    devedorExistente.numero = numero;
+  }
+} else {
+  if (valor < 0) {
+    alert("Não é possível registrar valor negativo para um novo devedor.");
+    return;
+  }
+  devedores.push({ nome, valor, numero, produtos: [] });
+}
+
 
       salvarDevedores(devedores);
       atualizarTabela();
@@ -445,6 +451,16 @@
   const link = `https://wa.me/55${dev.numero}?text=${encodeURIComponent(mensagem)}`;
   window.open(link, '_blank');
 }
+
+  document.getElementById('nome').addEventListener('blur', () => {
+    const nome = document.getElementById('nome').value.trim().toLowerCase();
+    const devedores = carregarDevedores();
+    const devedor = devedores.find(d => d.nome.toLowerCase() === nome);
+
+    if (devedor) {
+      document.getElementById('numero').value = devedor.numero;
+    }
+  });
 
   </script>
 </body>
