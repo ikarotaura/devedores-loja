@@ -211,6 +211,8 @@
         <input type="number" id="produto-valor" placeholder="Valor do Produto">
         <button onclick="adicionarProduto()">Adicionar Produto</button>
         <button onclick="fecharProdutos()">Fechar</button>
+        <button onclick="enviarWhatsApp()">📤 Enviar via WhatsApp</button>
+
     </div>
 
     <script>
@@ -360,6 +362,47 @@
 
         // Inicializa a tabela com os devedores salvos
         atualizarTabela();
+        function gerarMensagemWhatsApp() {
+    const devedores = carregarDevedores();
+
+    if (devedores.length === 0) {
+        alert("Não há devedores cadastrados.");
+        return;
+    }
+
+    let mensagem = "📋 *Lista de Devedores - Taurãcell Tech*\n\n";
+
+    devedores.forEach(dev => {
+        mensagem += `👤 *${dev.nome}*\n💰 Total Devido: R$ ${dev.valor.toFixed(2)}\n`;
+
+        if (dev.produtos.length > 0) {
+            mensagem += "📦 Produtos:\n";
+            dev.produtos.forEach(p => {
+                mensagem += `   - ${p.nome}: R$ ${p.valor.toFixed(2)}\n`;
+            });
+        }
+
+        mensagem += "\n";
+    });
+
+    const totalGeral = devedores.reduce((acc, d) => acc + d.valor, 0);
+    mensagem += `🧾 *Total Geral*: R$ ${totalGeral.toFixed(2)}`;
+
+    return encodeURIComponent(mensagem);
+}
+function enviarWhatsApp() {
+    const numero = prompt("Digite o número do WhatsApp com DDD (ex: 11999999999):");
+    
+    if (!numero || numero.length < 10) {
+        alert("Número inválido.");
+        return;
+    }
+
+    const mensagem = gerarMensagemWhatsApp();
+    const link = `https://wa.me/55${numero}?text=${mensagem}`;
+    window.open(link, '_blank');
+}
+
     </script>
 </body>
 
