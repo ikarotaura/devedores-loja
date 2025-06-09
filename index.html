@@ -117,7 +117,7 @@
 
         .header p {
             font-size: 1.2em;
-            color:rgb(206, 171, 17);
+            color: rgb(206, 171, 17);
             margin: 10px 0;
         }
 
@@ -274,19 +274,41 @@
             const nome = nomeInput.value.trim();
             const valor = parseFloat(valorInput.value.trim());
 
-            if (nome === '' || isNaN(valor) || valor <= 0) {
-                alert('Por favor, insira um nome válido e um valor positivo.');
+            if (nome === '' || isNaN(valor) || valor === 0) {
+                alert('Por favor, insira um nome válido e um valor diferente de zero.');
                 return;
             }
 
             const devedores = carregarDevedores();
-            devedores.push({ nome, valor, produtos: [] });
+            const devedorExistente = devedores.find(dev => dev.nome.toLowerCase() === nome.toLowerCase());
+
+            if (devedorExistente) {
+                devedorExistente.valor += valor;
+
+                // Se valor final for zero ou menor, remove o devedor
+                if (devedorExistente.valor <= 0) {
+                    if (confirm(`O valor do devedor ${devedorExistente.nome} ficou R$ ${devedorExistente.valor.toFixed(2)}. Deseja remover?`)) {
+                        const index = devedores.indexOf(devedorExistente);
+                        devedores.splice(index, 1);
+                    }
+                }
+
+            } else {
+                if (valor < 0) {
+                    alert("Não é possível registrar valor negativo para um novo devedor.");
+                    return;
+                }
+                devedores.push({ nome, valor, produtos: [] });
+            }
+
             salvarDevedores(devedores);
             atualizarTabela();
 
             nomeInput.value = '';
             valorInput.value = '';
         }
+
+
 
         function removerDevedor(index) {
             const devedores = carregarDevedores();
