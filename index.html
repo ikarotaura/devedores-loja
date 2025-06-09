@@ -2,408 +2,451 @@
 <html lang="pt-br">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lista de Devedores - Taurãcell Tech </title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
-        rel="stylesheet">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Savate:ital,wght@0,200..900;1,200..900&display=swap"
-        rel="stylesheet">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            background-color: black;
-            color: white;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lista de Devedores - Taurãcell Tech </title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
+    rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Savate:ital,wght@0,200..900;1,200..900&display=swap"
+    rel="stylesheet">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background-color: black;
+      color: white;
+    }
 
-        h1 {
-            text-align: center;
-            color: rgb(206, 171, 17);
-            font-family: "Savate", sans-serif;
-        }
+    h1 {
+      text-align: center;
+      color: rgb(206, 171, 17);
+      font-family: "Savate", sans-serif;
+    }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-        }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
 
-        table,
-        th,
-        td {
-            border: 1px solid #555;
-        }
+    table,
+    th,
+    td {
+      border: 1px solid #555;
+    }
 
-        th,
-        td {
-            padding: 10px;
-            text-align: left;
-            color: white;
-        }
+    th,
+    td {
+      padding: 10px;
+      text-align: left;
+      color: white;
+    }
 
-        th {
-            background-color: #333;
-        }
+    th {
+      background-color: #333;
+    }
 
-        .form-container {
-            margin-bottom: 20px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
+    .form-container {
+      margin-bottom: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
 
-        .form-container input {
-            flex: 1 1 calc(50% - 10px);
-            padding: 10px;
-            box-sizing: border-box;
-            background-color: #222;
-            color: white;
-            border: 1px solid #555;
-        }
+    .form-container input {
+      flex: 1 1 calc(50% - 10px);
+      padding: 10px;
+      box-sizing: border-box;
+      background-color: #222;
+      color: white;
+      border: 1px solid #555;
+    }
 
-        .form-container button {
-            flex: 1 1 100%;
-            padding: 10px;
-            background-color: #007BFF;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
+    .form-container button {
+      flex: 1 1 100%;
+      padding: 10px;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
 
-        .form-container button:hover {
-            background-color: #0056b3;
-        }
+    .form-container button:hover {
+      background-color: #0056b3;
+    }
 
-        .remove-button {
-            background-color: #f44336;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            cursor: pointer;
-        }
+    .remove-button {
+      background-color: #f44336;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      cursor: pointer;
+    }
 
-        .remove-button:hover {
-            background-color: #d32f2f;
-        }
+    .remove-button:hover {
+      background-color: #d32f2f;
+    }
 
-        .manage-products-button {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            cursor: pointer;
-        }
+    .manage-products-button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      cursor: pointer;
+    }
 
-        .manage-products-button:hover {
-            background-color: #388E3C;
-        }
+    .manage-products-button:hover {
+      background-color: #388E3C;
+    }
 
-        .header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
 
-        .header img {
-            height: 120px;
-        }
+    .header img {
+      height: 120px;
+    }
 
-        .header p {
-            font-size: 1.2em;
-            color: rgb(206, 171, 17);
-            margin: 10px 0;
-        }
+    .header p {
+      font-size: 1.2em;
+      color: rgb(206, 171, 17);
+      margin: 10px 0;
+    }
 
-        .total-container {
-            font-size: 1.2em;
-            font-weight: bold;
-            text-align: right;
-            margin-top: 10px;
-            color: white;
-        }
+    .total-container {
+      font-size: 1.2em;
+      font-weight: bold;
+      text-align: right;
+      margin-top: 10px;
+      color: white;
+    }
 
-        .products-container {
-            margin-top: 20px;
-            padding: 10px;
-            border: 1px solid #555;
-            background-color: #222;
-        }
+    .products-container {
+      margin-top: 20px;
+      padding: 10px;
+      border: 1px solid #555;
+      background-color: #222;
+    }
 
-        .products-container h3 {
-            color: white;
-        }
+    .products-container h3 {
+      color: white;
+    }
 
-        .products-container ul {
-            list-style: none;
-            padding: 0;
-        }
+    .products-container ul {
+      list-style: none;
+      padding: 0;
+    }
 
-        .products-container li {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-        }
+    .products-container li {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
 
-        .products-container input {
-            margin-right: 10px;
-            padding: 5px;
-            background-color: #333;
-            color: white;
-            border: 1px solid #555;
-        }
+    .products-container input {
+      margin-right: 10px;
+      padding: 5px;
+      background-color: #333;
+      color: white;
+      border: 1px solid #555;
+    }
 
-        @media (max-width: 768px) {
+    @media (max-width: 768px) {
 
-            table,
-            th,
-            td {
-                font-size: 0.9em;
-            }
+      table,
+      th,
+      td {
+        font-size: 0.9em;
+      }
 
-            th,
-            td {
-                padding: 8px;
-            }
-        }
-    </style>
+      th,
+      td {
+        padding: 8px;
+      }
+    }
+  </style>
 </head>
 
 <body>
-    <div class="header">
-        <img src="img/logo dourada.png" alt="Logo">
-        <p>o povo não me paga vey </p>
-    </div>
+  <div class="header">
+    <img src="img/logo dourada.png" alt="Logo">
+    <p>o povo não me paga vey </p>
+  </div>
 
-    <h1>Lista de Devedores - Taurãcell Tech</h1>
+  <h1>Lista de Devedores - Taurãcell Tech</h1>
 
-    <div class="form-container">
-        <input type="text" id="nome" placeholder="Nome do Devedor">
-        <input type="number" id="valor" placeholder="Valor devido">
-        <button onclick="adicionarDevedor()">Adicionar Devedor</button>
-    </div>
-
-    <table>
-        <thead>
-            <tr>
-                <th>Nome</th>
-                <th>Valor Devido (R$)</th>
-                <th>Ações</th>
-            </tr>
-        </thead>
-        <tbody id="tabela-devedores">
-            <!-- Linhas de devedores serão adicionadas aqui -->
-        </tbody>
-    </table>
-
-    <div class="total-container" id="total-devido">Total Devido: R$ 0.00</div>
-
-    <div class="products-container" id="products-container" style="display: none;">
-        <h3>Produtos do Devedor</h3>
-        <ul id="lista-produtos"></ul>
-        <input type="text" id="produto-nome" placeholder="Nome do Produto">
-        <input type="number" id="produto-valor" placeholder="Valor do Produto">
-        <button onclick="adicionarProduto()">Adicionar Produto</button>
-        <button onclick="fecharProdutos()">Fechar</button>
-        <button onclick="enviarWhatsApp()">📤 Enviar via WhatsApp</button>
-
-    </div>
-
-    <script>
-        let devedorAtual = null;
-
-        function carregarDevedores() {
-            const devedoresSalvos = localStorage.getItem('devedores');
-            return devedoresSalvos ? JSON.parse(devedoresSalvos) : [];
-        }
-
-        function salvarDevedores(devedores) {
-            localStorage.setItem('devedores', JSON.stringify(devedores));
-        }
-
-        function atualizarTabela() {
-            const tabelaDevedores = document.getElementById('tabela-devedores');
-            tabelaDevedores.innerHTML = '';
-
-            const devedores = carregarDevedores();
-            let total = 0;
-
-            devedores.forEach((devedor, index) => {
-                const novaLinha = document.createElement('tr');
-
-                const colunaNome = document.createElement('td');
-                colunaNome.textContent = devedor.nome;
-
-                const colunaValor = document.createElement('td');
-                colunaValor.textContent = devedor.valor.toFixed(2);
-
-                total += devedor.valor;
-
-                const colunaAcoes = document.createElement('td');
-                const botaoRemover = document.createElement('button');
-                botaoRemover.textContent = 'Remover';
-                botaoRemover.className = 'remove-button';
-                botaoRemover.onclick = () => removerDevedor(index);
-
-                const botaoProdutos = document.createElement('button');
-                botaoProdutos.textContent = 'Produtos';
-                botaoProdutos.className = 'manage-products-button';
-                botaoProdutos.onclick = () => gerenciarProdutos(index);
-
-                colunaAcoes.appendChild(botaoProdutos);
-                colunaAcoes.appendChild(botaoRemover);
-
-                novaLinha.appendChild(colunaNome);
-                novaLinha.appendChild(colunaValor);
-                novaLinha.appendChild(colunaAcoes);
-
-                tabelaDevedores.appendChild(novaLinha);
-            });
-
-            document.getElementById('total-devido').textContent = `Total Devido: R$ ${total.toFixed(2)}`;
-        }
-
-        function adicionarDevedor() {
-            const nomeInput = document.getElementById('nome');
-            const valorInput = document.getElementById('valor');
-
-            const nome = nomeInput.value.trim();
-            const valor = parseFloat(valorInput.value.trim());
-
-            if (nome === '' || isNaN(valor) || valor === 0) {
-                alert('Por favor, insira um nome válido e um valor diferente de zero.');
-                return;
-            }
-
-            const devedores = carregarDevedores();
-            const devedorExistente = devedores.find(dev => dev.nome.toLowerCase() === nome.toLowerCase());
-
-            if (devedorExistente) {
-                devedorExistente.valor += valor;
-
-                // Se valor final for zero ou menor, remove o devedor
-                if (devedorExistente.valor <= 0) {
-                    if (confirm(`O valor do devedor ${devedorExistente.nome} ficou R$ ${devedorExistente.valor.toFixed(2)}. Deseja remover?`)) {
-                        const index = devedores.indexOf(devedorExistente);
-                        devedores.splice(index, 1);
-                    }
-                }
-
-            } else {
-                if (valor < 0) {
-                    alert("Não é possível registrar valor negativo para um novo devedor.");
-                    return;
-                }
-                devedores.push({ nome, valor, produtos: [] });
-            }
-
-            salvarDevedores(devedores);
-            atualizarTabela();
-
-            nomeInput.value = '';
-            valorInput.value = '';
-        }
+  <div class="form-container">
+    <input type="text" id="nome" placeholder="Nome do Devedor">
+    <input type="number" id="valor" placeholder="Valor devido">
+    <input type="text" id="numero" placeholder="Número WhatsApp (ex: 11999999999)">
+    <button onclick="adicionarDevedor()">Adicionar Devedor</button>
+  </div>
 
 
+  <table>
+    <thead>
+      <tr>
+        <th>Nome</th>
+        <th>Valor Devido (R$)</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody id="tabela-devedores">
+      <!-- Linhas de devedores serão adicionadas aqui -->
+    </tbody>
+  </table>
 
-        function removerDevedor(index) {
-            const devedores = carregarDevedores();
-            devedores.splice(index, 1);
-            salvarDevedores(devedores);
-            atualizarTabela();
-        }
+  <div class="total-container" id="total-devido">Total Devido: R$ 0.00</div>
 
-        function gerenciarProdutos(index) {
-            const devedores = carregarDevedores();
-            devedorAtual = index;
-            const devedor = devedores[index];
+  <div class="products-container" id="products-container" style="display: none;">
+    <h3>Produtos do Devedor</h3>
+    <ul id="lista-produtos"></ul>
+    <input type="text" id="produto-nome" placeholder="Nome do Produto">
+    <input type="number" id="produto-valor" placeholder="Valor do Produto">
+    <button onclick="adicionarProduto()">Adicionar Produto</button>
+    <button onclick="fecharProdutos()">Fechar</button>
+    <button onclick="enviarWhatsApp()" style="
+            background-color: #25D366;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 20px;
+        ">
+      📤 Enviar Lista pelo WhatsApp
+    </button>
 
-            const listaProdutos = document.getElementById('lista-produtos');
-            listaProdutos.innerHTML = '';
 
-            devedor.produtos.forEach((produto, i) => {
-                const item = document.createElement('li');
-                item.textContent = `${produto.nome} - R$ ${produto.valor.toFixed(2)}`;
-                listaProdutos.appendChild(item);
-            });
+  </div>
 
-            document.getElementById('products-container').style.display = 'block';
-        }
+  <script>
+    let devedorAtual = null;
 
-        function adicionarProduto() {
-            const produtoNome = document.getElementById('produto-nome').value.trim();
-            const produtoValor = parseFloat(document.getElementById('produto-valor').value.trim());
-
-            if (produtoNome === '' || isNaN(produtoValor) || produtoValor <= 0) {
-                alert('Por favor, insira um nome válido e um valor positivo para o produto.');
-                return;
-            }
-
-            const devedores = carregarDevedores();
-            const devedor = devedores[devedorAtual];
-            devedor.produtos.push({ nome: produtoNome, valor: produtoValor });
-            salvarDevedores(devedores);
-
-            document.getElementById('produto-nome').value = '';
-            document.getElementById('produto-valor').value = '';
-
-            gerenciarProdutos(devedorAtual);
-        }
-
-        function fecharProdutos() {
-            document.getElementById('products-container').style.display = 'none';
-        }
-
-        // Inicializa a tabela com os devedores salvos
-        atualizarTabela();
-        function gerarMensagemWhatsApp() {
-    const devedores = carregarDevedores();
-
-    if (devedores.length === 0) {
-        alert("Não há devedores cadastrados.");
-        return;
+    function carregarDevedores() {
+      const devedoresSalvos = localStorage.getItem('devedores');
+      return devedoresSalvos ? JSON.parse(devedoresSalvos) : [];
     }
 
-    let mensagem = "📋 *Lista de Devedores - Taurãcell Tech*\n\n";
+    function salvarDevedores(devedores) {
+      localStorage.setItem('devedores', JSON.stringify(devedores));
+    }
 
-    devedores.forEach(dev => {
+    function atualizarTabela() {
+      const tabelaDevedores = document.getElementById('tabela-devedores');
+      tabelaDevedores.innerHTML = '';
+
+      const devedores = carregarDevedores();
+      let total = 0;
+
+      devedores.forEach((devedor, index) => {
+        const novaLinha = document.createElement('tr');
+
+        const colunaNome = document.createElement('td');
+        colunaNome.textContent = devedor.nome;
+
+        const colunaValor = document.createElement('td');
+        colunaValor.textContent = devedor.valor.toFixed(2);
+
+        total += devedor.valor;
+
+        const colunaAcoes = document.createElement('td');
+        const botaoRemover = document.createElement('button');
+        botaoRemover.textContent = 'Remover';
+        botaoRemover.className = 'remove-button';
+        botaoRemover.onclick = () => removerDevedor(index);
+
+        const botaoProdutos = document.createElement('button');
+        botaoProdutos.textContent = 'Produtos';
+        botaoProdutos.className = 'manage-products-button';
+        botaoProdutos.onclick = () => gerenciarProdutos(index);
+
+        colunaAcoes.appendChild(botaoProdutos);
+        colunaAcoes.appendChild(botaoRemover);
+
+        novaLinha.appendChild(colunaNome);
+        novaLinha.appendChild(colunaValor);
+        novaLinha.appendChild(colunaAcoes);
+
+        tabelaDevedores.appendChild(novaLinha);
+        const botaoWhats = document.createElement('button');
+        botaoWhats.textContent = 'WhatsApp';
+        botaoWhats.className = 'manage-products-button';
+        botaoWhats.style.backgroundColor = '#25D366';
+        botaoWhats.onclick = () => enviarWhatsAppIndividual(index);
+
+        colunaAcoes.appendChild(botaoProdutos);
+        colunaAcoes.appendChild(botaoWhats);
+        colunaAcoes.appendChild(botaoRemover);
+
+      });
+
+      document.getElementById('total-devido').textContent = `Total Devido: R$ ${total.toFixed(2)}`;
+    }
+
+    function adicionarDevedor() {
+      const nomeInput = document.getElementById('nome');
+      const valorInput = document.getElementById('valor');
+      const numeroInput = document.getElementById('numero');
+
+      const nome = nomeInput.value.trim();
+      const valor = parseFloat(valorInput.value.trim());
+      const numero = numeroInput.value.trim();
+
+      if (nome === '' || isNaN(valor) || valor === 0 || numero.length < 10) {
+        alert('Preencha todos os campos corretamente.');
+        return;
+      }
+
+      const devedores = carregarDevedores();
+      const devedorExistente = devedores.find(dev => dev.nome.toLowerCase() === nome.toLowerCase());
+
+      if (devedorExistente) {
+        devedorExistente.valor += valor;
+      } else {
+        if (valor < 0) {
+          alert("Não é possível registrar valor negativo para um novo devedor.");
+          return;
+        }
+        devedores.push({ nome, valor, numero, produtos: [] });
+      }
+
+      salvarDevedores(devedores);
+      atualizarTabela();
+
+      nomeInput.value = '';
+      valorInput.value = '';
+      numeroInput.value = '';
+    }
+
+
+
+
+    function removerDevedor(index) {
+      const devedores = carregarDevedores();
+      devedores.splice(index, 1);
+      salvarDevedores(devedores);
+      atualizarTabela();
+    }
+
+    function gerenciarProdutos(index) {
+      const devedores = carregarDevedores();
+      devedorAtual = index;
+      const devedor = devedores[index];
+
+      const listaProdutos = document.getElementById('lista-produtos');
+      listaProdutos.innerHTML = '';
+
+      devedor.produtos.forEach((produto, i) => {
+        const item = document.createElement('li');
+        item.textContent = `${produto.nome} - R$ ${produto.valor.toFixed(2)}`;
+        listaProdutos.appendChild(item);
+      });
+
+      document.getElementById('products-container').style.display = 'block';
+    }
+
+    function adicionarProduto() {
+      const produtoNome = document.getElementById('produto-nome').value.trim();
+      const produtoValor = parseFloat(document.getElementById('produto-valor').value.trim());
+
+      if (produtoNome === '' || isNaN(produtoValor) || produtoValor <= 0) {
+        alert('Por favor, insira um nome válido e um valor positivo para o produto.');
+        return;
+      }
+
+      const devedores = carregarDevedores();
+      const devedor = devedores[devedorAtual];
+      devedor.produtos.push({ nome: produtoNome, valor: produtoValor });
+      salvarDevedores(devedores);
+
+      document.getElementById('produto-nome').value = '';
+      document.getElementById('produto-valor').value = '';
+
+      gerenciarProdutos(devedorAtual);
+    }
+
+    function fecharProdutos() {
+      document.getElementById('products-container').style.display = 'none';
+    }
+
+    // Inicializa a tabela com os devedores salvos
+    atualizarTabela();
+    function gerarMensagemWhatsApp() {
+      const devedores = carregarDevedores();
+
+      if (devedores.length === 0) {
+        alert("Não há devedores cadastrados.");
+        return;
+      }
+
+      let mensagem = "📋 *Seu debito com a  Taurãcell Tech *\n\n";
+
+      devedores.forEach(dev => {
         mensagem += `👤 *${dev.nome}*\n💰 Total Devido: R$ ${dev.valor.toFixed(2)}\n`;
 
         if (dev.produtos.length > 0) {
-            mensagem += "📦 Produtos:\n";
-            dev.produtos.forEach(p => {
-                mensagem += `   - ${p.nome}: R$ ${p.valor.toFixed(2)}\n`;
-            });
+          mensagem += "🗂️ Produtos:\n";
+          dev.produtos.forEach(p => {
+            mensagem += `   - ${p.nome}: R$ ${p.valor.toFixed(2)}\n`;
+          });
         }
 
         mensagem += "\n";
-    });
+      });
 
-    const totalGeral = devedores.reduce((acc, d) => acc + d.valor, 0);
-    mensagem += `🧾 *Total Geral*: R$ ${totalGeral.toFixed(2)}`;
+      const totalGeral = devedores.reduce((acc, d) => acc + d.valor, 0);
+      mensagem += ` 📝 *Total Geral*: R$ ${totalGeral.toFixed(2)}`;
 
-    return encodeURIComponent(mensagem);
-}
-function enviarWhatsApp() {
-    const numero = prompt("Digite o número do WhatsApp com DDD (ex: 11999999999):");
-    
-    if (!numero || numero.length < 10) {
+      return encodeURIComponent(mensagem);
+    }
+    function enviarWhatsApp() {
+      const numero = prompt("Digite o número do WhatsApp com DDD (ex: 11999999999):");
+
+      if (!numero || numero.length < 10) {
         alert("Número inválido.");
         return;
+      }
+
+      const mensagem = gerarMensagemWhatsApp();
+      const link = `https://wa.me/55${numero}?text=${mensagem}`;
+      window.open(link, '_blank');
     }
 
-    const mensagem = gerarMensagemWhatsApp();
-    const link = `https://wa.me/55${numero}?text=${mensagem}`;
-    window.open(link, '_blank');
+    function enviarWhatsAppIndividual(index) {
+  const devedores = carregarDevedores();
+  const dev = devedores[index];
+
+  if (!dev.numero || dev.numero.length < 10) {
+    alert("Número de WhatsApp inválido.");
+    return;
+  }
+
+  let mensagem = `👋 Olá, ${dev.nome}!\n💰 Você está devendo R$ ${dev.valor.toFixed(2)} na Taurãcell Tech.\n`;
+
+  if (dev.produtos && dev.produtos.length > 0) {
+    mensagem += `📦 Produtos:\n`;
+    dev.produtos.forEach(p => {
+      mensagem += `• ${p.nome}: R$ ${p.valor.toFixed(2)}\n`;
+    });
+  }
+
+  mensagem += `\nPor favor, entre em contato para regularizar sua situação.`;
+
+  const link = `https://wa.me/55${dev.numero}?text=${encodeURIComponent(mensagem)}`;
+  window.open(link, '_blank');
 }
 
-    </script>
+  </script>
 </body>
 
 </html>
