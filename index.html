@@ -233,6 +233,9 @@
       color: #aaaaaa;
     }
 
+    .tabela-container {
+      overflow-x: auto;
+    }
 
     .products-container input {
       margin-right: 10px;
@@ -242,19 +245,55 @@
       border: 1px solid #555;
     }
 
-    @media (max-width: 768px) {
+   @media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
 
-      table,
-      th,
-      td {
-        font-size: 0.9em;
-      }
+  .header img {
+    height: 80px;
+    margin-bottom: 10px;
+  }
 
-      th,
-      td {
-        padding: 8px;
-      }
-    }
+  .form-container {
+    flex-direction: column;
+  }
+
+  .form-container input,
+  .form-container button {
+    flex: 1 1 100%;
+  }
+
+  table,
+  th,
+  td {
+    font-size: 0.85em;
+  }
+
+  .products-container input {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .products-container button {
+    width: 100%;
+    margin: 5px 0;
+  }
+
+  .products-container ul li {
+    font-size: 0.9em;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .total-container {
+    text-align: center;
+    font-size: 1em;
+  }
+}
+
   </style>
 </head>
 
@@ -273,21 +312,21 @@
     <button onclick="adicionarDevedor()">Adicionar Devedor</button>
   </div>
 
-
-  <table>
-    <thead>
-      <tr>
-        <th>Nome</th>
-        <th>Valor Devido (R$)</th>
-        <th>Histórico</th> <!-- NOVO -->
-        <th>Ações</th>
-      </tr>
-    </thead>
-    <tbody id="tabela-devedores">
-      <!-- Linhas de devedores serão adicionadas aqui -->
-    </tbody>
-  </table>
-
+  <div class="tabela-container">
+    <table>
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>Valor Devido (R$)</th>
+          <th>Histórico</th> <!-- NOVO -->
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody id="tabela-devedores">
+        <!-- Linhas de devedores serão adicionadas aqui -->
+      </tbody>
+    </table>
+  </div>
   <div class="total-container" id="total-devido">Total Devido: R$ 0.00</div>
 
   <div class="products-container" id="products-container" style="display: none;">
