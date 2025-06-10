@@ -1,20 +1,17 @@
+<!-- Salve como lista-devedores.html -->
 <!DOCTYPE html>
 <html lang="pt-br">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lista de Devedores - Taurãcell Tech </title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
-    rel="stylesheet">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Savate:ital,wght@0,200..900;1,200..900&display=swap"
-    rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Lista de Devedores - Taurãcell Tech</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Savate&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
-    body {
+     body {
       font-family: Arial, sans-serif;
       margin: 20px;
       background-color: black;
@@ -303,214 +300,175 @@
   }
 }
 
-
   </style>
 </head>
 
 <body>
   <div class="header">
-    <img src="img/logo dourada.png" alt="Logo">
-    <p>o povo não me paga vey </p>
+    <img src="img/logo dourada.png" alt="Logo" />
+    <p>Sistema de cobrança e ordem de serviço ! </p>
   </div>
 
   <h1>Lista de Devedores - Taurãcell Tech</h1>
 
   <div class="form-container">
-    <input type="text" id="nome" placeholder="Nome do Devedor">
-    <input type="number" id="valor" placeholder="Valor devido">
-    <input type="text" id="numero" placeholder="Número WhatsApp (ex: 11999999999)">
+    <input type="text" id="nome" placeholder="Nome do Devedor" />
+    <input type="number" id="valor" placeholder="Valor devido" />
+    <input type="text" id="servico" placeholder="Serviço realizado" />
+    <input type="text" id="numero" placeholder="Número WhatsApp (ex: 11999999999)" maxlength="11" />
     <button onclick="adicionarDevedor()">Adicionar Devedor</button>
   </div>
 
-  <div class="tabela-container">
-    <table>
-      <thead>
-        <tr>
-          <th>Nome</th>
-          <th>Valor Devido (R$)</th>
-          <th>Histórico</th> <!-- NOVO -->
-          <th>Ações</th>
-        </tr>
-      </thead>
-      <tbody id="tabela-devedores">
-        <!-- Linhas de devedores serão adicionadas aqui -->
-      </tbody>
-    </table>
-  </div>
+  <table>
+    <thead>
+      <tr>
+        <th>Nome</th>
+        <th>Valor Devido (R$)</th>
+        <th>Serviço</th>
+        <th>Histórico</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody id="tabela-devedores"></tbody>
+  </table>
+
   <div class="total-container" id="total-devido">Total Devido: R$ 0.00</div>
 
-  <div class="products-container" id="products-container" style="display: none;">
+  <div class="products-container" id="products-container" style="display: none">
     <h3>Produtos do Devedor</h3>
     <ul id="lista-produtos"></ul>
-    <input type="text" id="produto-nome" placeholder="Nome do Produto">
-    <input type="number" id="produto-valor" placeholder="Valor do Produto">
+    <input type="text" id="produto-nome" placeholder="Nome do Produto" />
+    <input type="number" id="produto-valor" placeholder="Valor do Produto" />
     <button onclick="adicionarProduto()">Adicionar Produto</button>
     <button onclick="fecharProdutos()">Fechar</button>
-    <button onclick="enviarWhatsApp()" style="
-            background-color: #25D366;
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-            margin-top: 20px;
-        ">
-      📤 Enviar Lista pelo WhatsApp
-    </button>
-
-
+    <button onclick="enviarWhatsApp()">📤 Enviar Lista pelo WhatsApp</button>
   </div>
 
   <script>
     let devedorAtual = null;
 
     function carregarDevedores() {
-      const devedoresSalvos = localStorage.getItem('devedores');
+      const devedoresSalvos = localStorage.getItem("devedores");
       return devedoresSalvos ? JSON.parse(devedoresSalvos) : [];
     }
 
     function salvarDevedores(devedores) {
-      localStorage.setItem('devedores', JSON.stringify(devedores));
+      localStorage.setItem("devedores", JSON.stringify(devedores));
     }
 
     function atualizarTabela() {
-      const tabelaDevedores = document.getElementById('tabela-devedores');
-      tabelaDevedores.innerHTML = '';
-
+      const tabelaDevedores = document.getElementById("tabela-devedores");
+      tabelaDevedores.innerHTML = "";
       const devedores = carregarDevedores();
       let total = 0;
 
       devedores.forEach((devedor, index) => {
-        const novaLinha = document.createElement('tr');
+        const novaLinha = document.createElement("tr");
 
-        const colunaNome = document.createElement('td');
+        const colunaNome = document.createElement("td");
         colunaNome.textContent = devedor.nome;
+        novaLinha.appendChild(colunaNome);
 
-        const colunaValor = document.createElement('td');
+        const colunaValor = document.createElement("td");
         colunaValor.textContent = devedor.valor.toFixed(2);
+        novaLinha.appendChild(colunaValor);
 
-        total += devedor.valor;
-        const colunaHistorico = document.createElement('td');
+        const colunaServico = document.createElement("td");
+        colunaServico.textContent = devedor.servico || "—";
+        novaLinha.appendChild(colunaServico);
 
-        if (devedor.historico && devedor.historico.length > 0) {
-          const listaHistorico = document.createElement('ul');
-          listaHistorico.style.padding = '0';
-          listaHistorico.style.margin = '0';
-          listaHistorico.style.listStyle = 'none';
+        const colunaProdutos = document.createElement("td");
+        colunaProdutos.textContent = (devedor.produtos || []).length;
+        novaLinha.appendChild(colunaProdutos);
 
-          devedor.historico.forEach(item => {
-            const li = document.createElement('li');
-            li.textContent = `R$ ${item.valor.toFixed(2)} - ${item.data}`;
-            li.style.fontSize = '0.85em';
-            li.style.color = '#ccc';
-            listaHistorico.appendChild(li);
-          });
+        const colunaAcoes = document.createElement("td");
 
-          colunaHistorico.appendChild(listaHistorico);
-        } else {
-          colunaHistorico.textContent = '—';
-        }
-
-        const colunaAcoes = document.createElement('td');
-        const botaoRemover = document.createElement('button');
-        botaoRemover.textContent = 'Remover';
-        botaoRemover.className = 'remove-button';
-        botaoRemover.onclick = () => removerDevedor(index);
-
-        const botaoProdutos = document.createElement('button');
-        botaoProdutos.textContent = 'Produtos';
-        botaoProdutos.className = 'manage-products-button';
+        const botaoProdutos = document.createElement("button");
+        botaoProdutos.textContent = "Produtos";
+        botaoProdutos.className = "manage-products-button";
         botaoProdutos.onclick = () => gerenciarProdutos(index);
 
-        colunaAcoes.appendChild(botaoProdutos);
-        colunaAcoes.appendChild(botaoRemover);
-
-        novaLinha.appendChild(colunaNome);
-        novaLinha.appendChild(colunaValor);
-        novaLinha.appendChild(colunaHistorico);
-        novaLinha.appendChild(colunaAcoes);
-
-        tabelaDevedores.appendChild(novaLinha);
-        const botaoWhats = document.createElement('button');
-        botaoWhats.textContent = 'WhatsApp';
-        botaoWhats.className = 'manage-products-button';
-        botaoWhats.style.backgroundColor = '#25D366';
+        const botaoWhats = document.createElement("button");
+        botaoWhats.textContent = "WhatsApp";
+        botaoWhats.className = "manage-products-button";
+        botaoWhats.style.backgroundColor = "#25D366";
         botaoWhats.onclick = () => enviarWhatsAppIndividual(index);
+
+        const botaoOrdemServico = document.createElement("button");
+        botaoOrdemServico.textContent = "Enviar OS";
+        botaoOrdemServico.className = "manage-products-button";
+        botaoOrdemServico.style.backgroundColor = "#007BFF";
+        botaoOrdemServico.onclick = () => enviarOrdemServicoWhatsApp(index);
+
+        const botaoPDF = document.createElement("button");
+        botaoPDF.textContent = "📄 PDF OS";
+        botaoPDF.className = "manage-products-button";
+        botaoPDF.style.backgroundColor = "#ffc107";
+        botaoPDF.onclick = () => gerarPDFOrdemServico(index);
+
+        const botaoRemover = document.createElement("button");
+        botaoRemover.textContent = "Remover";
+        botaoRemover.className = "remove-button";
+        botaoRemover.onclick = () => removerDevedor(index);
 
         colunaAcoes.appendChild(botaoProdutos);
         colunaAcoes.appendChild(botaoWhats);
+        colunaAcoes.appendChild(botaoOrdemServico);
+        colunaAcoes.appendChild(botaoPDF);
         colunaAcoes.appendChild(botaoRemover);
 
+        novaLinha.appendChild(colunaAcoes);
+        tabelaDevedores.appendChild(novaLinha);
+
+        total += devedor.valor;
       });
 
-      document.getElementById('total-devido').textContent = `Total Devido: R$ ${total.toFixed(2)}`;
+      document.getElementById("total-devido").textContent = `Total Devido: R$ ${total.toFixed(2)}`;
     }
 
     function adicionarDevedor() {
-      const nomeInput = document.getElementById('nome');
-      const valorInput = document.getElementById('valor');
-      const numeroInput = document.getElementById('numero');
+      const nomeInput = document.getElementById("nome");
+      const valorInput = document.getElementById("valor");
+      const servicoInput = document.getElementById("servico");
+      const numeroInput = document.getElementById("numero");
 
       const nome = nomeInput.value.trim();
-      const valor = parseFloat(valorInput.value.trim());
+      const valor = parseFloat(valorInput.value);
+      const servico = servicoInput.value.trim();
       const numero = numeroInput.value.trim();
 
-      if (nome === '' || isNaN(valor) || valor === 0 || numero.length < 10) {
-        alert('Preencha todos os campos corretamente.');
+      if (!nome || isNaN(valor) || valor <= 0) {
+        alert("Por favor, preencha nome e valor corretamente.");
+        return;
+      }
+
+      if (!numero.match(/^\d{10,11}$/)) {
+        alert("Número de WhatsApp inválido. Informe apenas números (ex: 11999999999).");
         return;
       }
 
       const devedores = carregarDevedores();
-      const devedorExistente = devedores.find(dev => dev.nome.toLowerCase() === nome.toLowerCase());
-
+      const devedorExistente = devedores.find((d) => d.nome === nome);
       if (devedorExistente) {
         devedorExistente.valor += valor;
-
-        // Salva o valor e data como histórico de dívidas
-        if (!devedorExistente.historico) devedorExistente.historico = [];
-        devedorExistente.historico.push({
-          valor: valor,
-          data: new Date().toLocaleDateString('pt-BR')
-        });
-
-        // Se o número digitado for válido e diferente do salvo, atualiza (opcional)
-        if (/^\d{10,11}$/.test(numero) && numero !== devedorExistente.numero) {
-          devedorExistente.numero = numero;
-        }
+        if (servico) devedorExistente.servico = servico;
+        if (numero) devedorExistente.numero = numero;
       } else {
-        if (valor < 0) {
-          alert("Não é possível registrar valor negativo para um novo devedor.");
-          return;
-        }
-        devedores.push({
-          nome,
-          valor,
-          numero,
-          produtos: [],
-          historico: [
-            {
-              valor: valor,
-              data: new Date().toLocaleDateString('pt-BR')
-            }
-          ]
-        });
-
+        devedores.push({ nome, valor, servico, numero, produtos: [] });
       }
-
 
       salvarDevedores(devedores);
       atualizarTabela();
 
-      nomeInput.value = '';
-      valorInput.value = '';
-      numeroInput.value = '';
+      nomeInput.value = "";
+      valorInput.value = "";
+      servicoInput.value = "";
+      numeroInput.value = "";
     }
 
-
-
-
     function removerDevedor(index) {
+      if (!confirm("Deseja remover este devedor?")) return;
+
       const devedores = carregarDevedores();
       devedores.splice(index, 1);
       salvarDevedores(devedores);
@@ -518,135 +476,159 @@
     }
 
     function gerenciarProdutos(index) {
-      const devedores = carregarDevedores();
       devedorAtual = index;
+      const devedores = carregarDevedores();
       const devedor = devedores[index];
 
-      const listaProdutos = document.getElementById('lista-produtos');
-      listaProdutos.innerHTML = '';
+      document.getElementById("lista-produtos").innerHTML = "";
+      (devedor.produtos || []).forEach((produto, i) => {
+        const li = document.createElement("li");
+        li.textContent = `${produto.nome} - R$ ${produto.valor.toFixed(2)}`;
 
-      devedor.produtos.forEach((produto, i) => {
-        const item = document.createElement('li');
-        item.textContent = `${produto.nome} - R$ ${produto.valor.toFixed(2)}`;
-        listaProdutos.appendChild(item);
+        const btnRemover = document.createElement("button");
+        btnRemover.textContent = "Remover";
+        btnRemover.className = "remove-button";
+        btnRemover.onclick = () => {
+          devedor.produtos.splice(i, 1);
+          salvarDevedores(devedores);
+          gerenciarProdutos(index);
+        };
+
+        li.appendChild(btnRemover);
+        document.getElementById("lista-produtos").appendChild(li);
       });
 
-      document.getElementById('products-container').style.display = 'block';
-      if (devedor.historico && devedor.historico.length > 0) {
-        const historicoTitulo = document.createElement('h4');
-        historicoTitulo.textContent = '📅 Histórico de Valores:';
-        listaProdutos.appendChild(historicoTitulo);
-
-        devedor.historico.forEach(entry => {
-          const histItem = document.createElement('li');
-          histItem.textContent = `R$ ${entry.valor.toFixed(2)} em ${entry.data}`;
-          listaProdutos.appendChild(histItem);
-        });
-      }
-
+      document.getElementById("products-container").style.display = "block";
     }
 
     function adicionarProduto() {
-      const produtoNome = document.getElementById('produto-nome').value.trim();
-      const produtoValor = parseFloat(document.getElementById('produto-valor').value.trim());
+      const nomeProdutoInput = document.getElementById("produto-nome");
+      const valorProdutoInput = document.getElementById("produto-valor");
 
-      if (produtoNome === '' || isNaN(produtoValor) || produtoValor <= 0) {
-        alert('Por favor, insira um nome válido e um valor positivo para o produto.');
+      const nome = nomeProdutoInput.value.trim();
+      const valor = parseFloat(valorProdutoInput.value);
+
+      if (!nome || isNaN(valor) || valor <= 0) {
+        alert("Por favor, preencha nome e valor do produto corretamente.");
         return;
       }
 
       const devedores = carregarDevedores();
       const devedor = devedores[devedorAtual];
-      devedor.produtos.push({ nome: produtoNome, valor: produtoValor });
+
+      if (!devedor.produtos) devedor.produtos = [];
+
+      devedor.produtos.push({ nome, valor });
+      devedor.valor += valor;
+
       salvarDevedores(devedores);
-
-      document.getElementById('produto-nome').value = '';
-      document.getElementById('produto-valor').value = '';
-
       gerenciarProdutos(devedorAtual);
+      atualizarTabela();
+
+      nomeProdutoInput.value = "";
+      valorProdutoInput.value = "";
     }
 
     function fecharProdutos() {
-      document.getElementById('products-container').style.display = 'none';
-    }
-
-    // Inicializa a tabela com os devedores salvos
-    atualizarTabela();
-    function gerarMensagemWhatsApp() {
-      const devedores = carregarDevedores();
-
-      if (devedores.length === 0) {
-        alert("Não há devedores cadastrados.");
-        return;
-      }
-
-      let mensagem = "📋 *Seu debito com a  Taurãcell Tech *\n\n";
-
-      devedores.forEach(dev => {
-        mensagem += `👤 *${dev.nome}*\n💰 Total Devido: R$ ${dev.valor.toFixed(2)}\n`;
-
-        if (dev.produtos.length > 0) {
-          mensagem += "🗂️ Produtos:\n";
-          dev.produtos.forEach(p => {
-            mensagem += `   - ${p.nome}: R$ ${p.valor.toFixed(2)}\n`;
-          });
-        }
-
-        mensagem += "\n";
-      });
-
-      const totalGeral = devedores.reduce((acc, d) => acc + d.valor, 0);
-      mensagem += ` 📝 *Total Geral*: R$ ${totalGeral.toFixed(2)}`;
-
-      return encodeURIComponent(mensagem);
-    }
-    function enviarWhatsApp() {
-      const numero = prompt("Digite o número do WhatsApp com DDD (ex: 11999999999):");
-
-      if (!numero || numero.length < 10) {
-        alert("Número inválido.");
-        return;
-      }
-
-      const mensagem = gerarMensagemWhatsApp();
-      const link = `https://wa.me/55${numero}?text=${mensagem}`;
-      window.open(link, '_blank');
+      document.getElementById("products-container").style.display = "none";
+      devedorAtual = null;
     }
 
     function enviarWhatsAppIndividual(index) {
       const devedores = carregarDevedores();
       const dev = devedores[index];
+      if (!dev.numero || dev.numero.length < 10) {
+        alert("Número inválido.");
+        return;
+      }
+      let mensagem = `*Taurãcell Tech - Dívida Atualizada*\n\n`;
+      mensagem += `Olá ${dev.nome}, sua dívida atual é de R$ ${dev.valor.toFixed(2)}.\n`;
+      mensagem += "Por favor, entre em contato para regularizar o pagamento.\n\n";
+      mensagem += "Obrigado pela preferência!";
+
+      const link = `https://wa.me/55${dev.numero}?text=${encodeURIComponent(mensagem)}`;
+      window.open(link, "_blank");
+    }
+
+    function enviarWhatsApp() {
+      if (devedorAtual === null) return;
+      const devedores = carregarDevedores();
+      const dev = devedores[devedorAtual];
 
       if (!dev.numero || dev.numero.length < 10) {
-        alert("Número de WhatsApp inválido.");
+        alert("Número inválido.");
         return;
       }
 
-      let mensagem = `👋 Olá, ${dev.nome}!\n💰 Você está devendo R$ ${dev.valor.toFixed(2)} na Taurãcell Tech.\n`;
+      let mensagem = `*Taurãcell Tech - Produtos e Serviços*\n\n`;
+      mensagem += `Cliente: ${dev.nome}\n`;
+      mensagem += `Dívida total: R$ ${dev.valor.toFixed(2)}\n\n`;
 
       if (dev.produtos && dev.produtos.length > 0) {
-        mensagem += `📦 Produtos:\n`;
-        dev.produtos.forEach(p => {
-          mensagem += `• ${p.nome}: R$ ${p.valor.toFixed(2)}\n`;
+        mensagem += "Produtos:\n";
+        dev.produtos.forEach((p) => {
+          mensagem += `- ${p.nome}: R$ ${p.valor.toFixed(2)}\n`;
+        });
+      } else {
+        mensagem += "Nenhum produto cadastrado.\n";
+      }
+
+      mensagem += "\nPor favor, entre em contato para quitar o débito.\nObrigado!";
+
+      const link = `https://wa.me/55${dev.numero}?text=${encodeURIComponent(mensagem)}`;
+      window.open(link, "_blank");
+    }
+
+    function enviarOrdemServicoWhatsApp(index) {
+      const devedores = carregarDevedores();
+      const dev = devedores[index];
+
+      if (!dev.numero || dev.numero.length < 10) {
+        alert("Número inválido.");
+        return;
+      }
+
+      let mensagem = `🛠 *Ordem de Serviço - Taurãcell Tech*\n\n`;
+      mensagem += `Cliente: ${dev.nome}\n`;
+      mensagem += `Serviço: ${dev.servico || "—"}\n`;
+      mensagem += `Valor: R$ ${dev.valor.toFixed(2)}\n\n`;
+      mensagem += "Obrigado pela preferência!";
+
+      const link = `https://wa.me/55${dev.numero}?text=${encodeURIComponent(mensagem)}`;
+      window.open(link, "_blank");
+    }
+
+    async function gerarPDFOrdemServico(index) {
+      const { jsPDF } = window.jspdf;
+      const devedores = carregarDevedores();
+      const dev = devedores[index];
+
+      const doc = new jsPDF();
+
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(16);
+      doc.text("Ordem de Serviço - Taurãcell Tech", 20, 20);
+
+      doc.setFontSize(12);
+      doc.setFont("helvetica", "normal");
+      doc.text(`Cliente: ${dev.nome}`, 20, 40);
+      doc.text(`Número WhatsApp: ${dev.numero}`, 20, 50);
+      doc.text(`Serviço: ${dev.servico || "—"}`, 20, 60);
+      doc.text(`Valor Total: R$ ${dev.valor.toFixed(2)}`, 20, 70);
+
+      if (dev.produtos?.length) {
+        doc.text("Produtos:", 20, 90);
+        dev.produtos.forEach((produto, i) => {
+          doc.text(`- ${produto.nome}: R$ ${produto.valor.toFixed(2)}`, 25, 100 + i * 10);
         });
       }
 
-      mensagem += `\nPor favor, entre em contato para regularizar sua situação.`;
+      doc.text("Obrigado pela preferência!", 20, 160);
 
-      const link = `https://wa.me/55${dev.numero}?text=${encodeURIComponent(mensagem)}`;
-      window.open(link, '_blank');
+      doc.save(`OrdemServico_${dev.nome.replace(/\s+/g, "_")}.pdf`);
     }
 
-    document.getElementById('nome').addEventListener('blur', () => {
-      const nome = document.getElementById('nome').value.trim().toLowerCase();
-      const devedores = carregarDevedores();
-      const devedor = devedores.find(d => d.nome.toLowerCase() === nome);
-
-      if (devedor) {
-        document.getElementById('numero').value = devedor.numero;
-      }
-    });
-
+    atualizarTabela();
   </script>
 </body>
 
