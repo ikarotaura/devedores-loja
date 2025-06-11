@@ -143,6 +143,27 @@
       background-color: #d32f2f;
     }
 
+    /* Novos botões - Ordem de Serviço (laranja) e Valor Débito (verde) */
+    .btn-ordem-servico {
+      background-color: #ffb300;
+      color: white;
+      transition: background-color 0.3s;
+    }
+
+    .btn-ordem-servico:hover {
+      background-color: #e6a100;
+    }
+
+    .btn-valor-debito {
+      background-color: #009688;
+      color: white;
+      transition: background-color 0.3s;
+    }
+
+    .btn-valor-debito:hover {
+      background-color: #00796b;
+    }
+
     .total-container {
       font-size: 1.3rem;
       font-weight: 700;
@@ -343,8 +364,12 @@
         colunaNome.textContent = devedor.nome;
         novaLinha.appendChild(colunaNome);
 
+        // Calcula valor total incluindo produtos
+        const totalProdutos = devedor.produtos ? devedor.produtos.reduce((acc, p) => acc + p.valor, 0) : 0;
+        const valorTotal = devedor.valor + totalProdutos;
+
         const colunaValor = document.createElement("td");
-        colunaValor.textContent = devedor.valor.toFixed(2);
+        colunaValor.textContent = valorTotal.toFixed(2);
         novaLinha.appendChild(colunaValor);
 
         const colunaServico = document.createElement("td");
@@ -356,7 +381,7 @@
         novaLinha.appendChild(colunaGarantia);
 
         const colunaProdutos = document.createElement("td");
-        colunaProdutos.textContent = (devedor.produtos || []).length;
+        colunaProdutos.textContent = (devedor.produtos && devedor.produtos.length) ? devedor.produtos.length : 0;
         novaLinha.appendChild(colunaProdutos);
 
         const colunaAcoes = document.createElement("td");
@@ -364,34 +389,39 @@
         const botaoProdutos = document.createElement("button");
         botaoProdutos.textContent = "Produtos";
         botaoProdutos.className = "manage-products-button";
-        botaoProdutos.onclick = () => gerenciarProdutos(index);
-
-        const botaoWhats = document.createElement("button");
-        botaoWhats.textContent = "WhatsApp";
-        botaoWhats.className = "manage-products-button";
-        botaoWhats.style.backgroundColor = "#25D366";
-        botaoWhats.style.color = "white";
-        botaoWhats.style.marginLeft = "5px";
-        botaoWhats.onclick = () => enviarMensagemWhatsApp(index);
-
-        const botaoRemover = document.createElement("button");
-        botaoRemover.textContent = "Remover";
-        botaoRemover.className = "remove-button";
-        botaoRemover.onclick = () => {
-          if (confirm(`Remover ${devedor.nome} da lista?`)) {
-            removerDevedor(index);
-          }
-        };
-
+        botaoProdutos.onclick = () => abrirProdutos(index);
         colunaAcoes.appendChild(botaoProdutos);
-        colunaAcoes.appendChild(botaoWhats);
-        colunaAcoes.appendChild(botaoRemover);
+
+        const botaoEditar = document.createElement("button");
+        botaoEditar.textContent = "Editar";
+        botaoEditar.className = "manage-products-button";
+        botaoEditar.onclick = () => editarDevedor(index);
+        colunaAcoes.appendChild(botaoEditar);
+
+        const botaoExcluir = document.createElement("button");
+        botaoExcluir.textContent = "Excluir";
+        botaoExcluir.className = "remove-button";
+        botaoExcluir.onclick = () => excluirDevedor(index);
+        colunaAcoes.appendChild(botaoExcluir);
+
+        // NOVOS BOTÕES ADICIONADOS: Ordem de Serviço e Valor Débito
+        const botaoOrdemServico = document.createElement("button");
+        botaoOrdemServico.textContent = "Ordem Serviço";
+        botaoOrdemServico.className = "manage-products-button btn-ordem-servico";
+        botaoOrdemServico.onclick = () => enviarOrdemDeServico(index);
+        colunaAcoes.appendChild(botaoOrdemServico);
+
+        const botaoValor = document.createElement("button");
+        botaoValor.textContent = "Valor Débito";
+        botaoValor.className = "manage-products-button btn-valor-debito";
+        botaoValor.onclick = () => enviarValorDebito(index);
+        colunaAcoes.appendChild(botaoValor);
 
         novaLinha.appendChild(colunaAcoes);
 
         tabelaDevedores.appendChild(novaLinha);
 
-        total += devedor.valor + (devedor.produtos ? devedor.produtos.reduce((acc, p) => acc + p.valor, 0) : 0);
+        total += valorTotal;
       });
 
       document.getElementById("total-devido").textContent = `Total Devido: R$ ${total.toFixed(2)}`;
@@ -404,8 +434,8 @@
       const garantia = document.getElementById("garantia").value.trim();
       const numero = document.getElementById("numero").value.trim();
 
-      if (!nome || isNaN(valor) || valor <= 0 || !numero.match(/^\d{10,11}$/)) {
-        alert("Preencha corretamente os campos: Nome, Valor e Número WhatsApp (10 ou 11 dígitos).");
+      if (!nome || isNaN(valor) || !numero) {
+        alert("Por favor, preencha os campos Nome, Valor e Número corretamente.");
         return;
       }
 
@@ -421,108 +451,187 @@
       });
 
       salvarDevedores(devedores);
+      atualizarTabela();
+      limparCampos();
+    }
 
+    function limparCampos() {
       document.getElementById("nome").value = "";
       document.getElementById("valor").value = "";
       document.getElementById("servico").value = "";
       document.getElementById("garantia").value = "";
       document.getElementById("numero").value = "";
+    }
 
+    function editarDevedor(index) {
+      const devedores = carregarDevedores();
+      const d = devedores[index];
+
+      const novoNome = prompt("Editar nome do devedor:", d.nome);
+      if (novoNome === null) return;
+      const novoValor = prompt("Editar valor devido:", d.valor);
+      if (novoValor === null || isNaN(parseFloat(novoValor))) return;
+      const novoServico = prompt("Editar serviço realizado:", d.servico || "");
+      if (novoServico === null) return;
+      const novaGarantia = prompt("Editar garantia:", d.garantia || "");
+      if (novaGarantia === null) return;
+      const novoNumero = prompt("Editar número WhatsApp:", d.numero);
+      if (novoNumero === null) return;
+
+      devedores[index] = {
+        ...d,
+        nome: novoNome.trim(),
+        valor: parseFloat(novoValor),
+        servico: novoServico.trim(),
+        garantia: novaGarantia.trim(),
+        numero: novoNumero.trim()
+      };
+
+      salvarDevedores(devedores);
       atualizarTabela();
     }
 
-    function removerDevedor(index) {
+    function excluirDevedor(index) {
+      if (!confirm("Tem certeza que deseja excluir este devedor?")) return;
+
       const devedores = carregarDevedores();
       devedores.splice(index, 1);
       salvarDevedores(devedores);
       atualizarTabela();
-      fecharProdutos();
     }
 
-    function gerenciarProdutos(index) {
-      const devedores = carregarDevedores();
+    /* PRODUTOS */
+    function abrirProdutos(index) {
       devedorAtual = index;
-      mostrarProdutos(devedores[index]);
-    }
+      const devedores = carregarDevedores();
+      const devedor = devedores[index];
+      const listaProdutos = document.getElementById("lista-produtos");
+      listaProdutos.innerHTML = "";
 
-    function mostrarProdutos(devedor) {
-      document.getElementById("products-container").style.display = "block";
-      atualizarListaProdutos(devedor.produtos || []);
-    }
+      if (devedor.produtos && devedor.produtos.length) {
+        devedor.produtos.forEach((produto, i) => {
+          const li = document.createElement("li");
+          li.textContent = `${produto.nome} - R$ ${produto.valor.toFixed(2)}`;
 
-    function atualizarListaProdutos(produtos) {
-      const lista = document.getElementById("lista-produtos");
-      lista.innerHTML = "";
-      produtos.forEach((produto, idx) => {
-        const li = document.createElement("li");
-        li.textContent = `${produto.nome} — R$ ${produto.valor.toFixed(2)}`;
-        const btnRemover = document.createElement("button");
-        btnRemover.textContent = "X";
-        btnRemover.onclick = () => {
-          removerProduto(idx);
-        };
-        li.appendChild(btnRemover);
-        lista.appendChild(li);
-      });
-    }
+          const btnExcluir = document.createElement("button");
+          btnExcluir.textContent = "X";
+          btnExcluir.onclick = () => excluirProduto(i);
 
-    function adicionarProduto() {
-      const nomeProd = document.getElementById("produto-nome").value.trim();
-      const valorProd = parseFloat(document.getElementById("produto-valor").value);
-      if (!nomeProd || isNaN(valorProd) || valorProd <= 0) {
-        alert("Preencha corretamente o nome e valor do produto.");
-        return;
+          li.appendChild(btnExcluir);
+          listaProdutos.appendChild(li);
+        });
       }
-      const devedores = carregarDevedores();
-      if (devedorAtual === null || devedorAtual >= devedores.length) return;
-      const devedor = devedores[devedorAtual];
-      devedor.produtos = devedor.produtos || [];
-      devedor.produtos.push({ nome: nomeProd, valor: valorProd });
-      salvarDevedores(devedores);
-      atualizarListaProdutos(devedor.produtos);
-      document.getElementById("produto-nome").value = "";
-      document.getElementById("produto-valor").value = "";
-      atualizarTabela();
-    }
 
-    function removerProduto(idx) {
-      const devedores = carregarDevedores();
-      if (devedorAtual === null || devedorAtual >= devedores.length) return;
-      const devedor = devedores[devedorAtual];
-      devedor.produtos.splice(idx, 1);
-      salvarDevedores(devedores);
-      atualizarListaProdutos(devedor.produtos);
-      atualizarTabela();
+      document.getElementById("products-container").style.display = "block";
     }
 
     function fecharProdutos() {
       document.getElementById("products-container").style.display = "none";
       devedorAtual = null;
+      atualizarTabela();
     }
 
-    function enviarMensagemWhatsApp(index) {
+    function adicionarProduto() {
+      const nomeProduto = document.getElementById("produto-nome").value.trim();
+      const valorProduto = parseFloat(document.getElementById("produto-valor").value);
+
+      if (!nomeProduto || isNaN(valorProduto)) {
+        alert("Preencha o nome e o valor do produto corretamente.");
+        return;
+      }
+
+      const devedores = carregarDevedores();
+
+      if (!devedores[devedorAtual].produtos) {
+        devedores[devedorAtual].produtos = [];
+      }
+
+      devedores[devedorAtual].produtos.push({ nome: nomeProduto, valor: valorProduto });
+      salvarDevedores(devedores);
+
+      document.getElementById("produto-nome").value = "";
+      document.getElementById("produto-valor").value = "";
+
+      abrirProdutos(devedorAtual);
+    }
+
+    function excluirProduto(produtoIndex) {
+      const devedores = carregarDevedores();
+      devedores[devedorAtual].produtos.splice(produtoIndex, 1);
+      salvarDevedores(devedores);
+      abrirProdutos(devedorAtual);
+    }
+
+    /* FUNÇÕES PEDIDAS */
+
+    // Função 1 - Enviar Ordem de Serviço (com garantia)
+    function enviarOrdemDeServico(index) {
       const devedores = carregarDevedores();
       const d = devedores[index];
-      let mensagem = `*Olá, ${d.nome}!*\nVocê possui um débito com a Taurãcell Tech.\n\n*Detalhes:*\n- Valor devido: R$ ${d.valor.toFixed(2)}\n- Serviço: ${d.servico || "—"}\n- Garantia: ${d.garantia || "—"}`;
+
+      const totalProdutos = d.produtos ? d.produtos.reduce((acc, p) => acc + p.valor, 0) : 0;
+      const valorTotal = d.valor + totalProdutos;
+
+      let mensagem = `*Ordem de Serviço - Taurãcell Tech*\n\n` +
+        `Cliente: ${d.nome}\n` +
+        `Serviço: ${d.servico || "—"}\n` +
+        `Garantia: ${d.garantia || "—"}\n\n`;
+
       if (d.produtos && d.produtos.length) {
-        mensagem += `\n- Produtos:\n`;
+        mensagem += `Produtos:\n`;
         d.produtos.forEach(p => {
-          mensagem += `  • ${p.nome} — R$ ${p.valor.toFixed(2)}\n`;
+          mensagem += `• ${p.nome} — R$ ${p.valor.toFixed(2)}\n`;
         });
+        mensagem += `\n`;
       }
-      mensagem += `\nPor favor, entre em contato para regularizar sua situação.\n\n*Taurãcell Tech*`;
+
+      mensagem += `Valor total a pagar: R$ ${valorTotal.toFixed(2)}\n\n` +
+        `Por favor, confirme o serviço e condições.`;
+
       const url = `https://wa.me/55${d.numero}?text=${encodeURIComponent(mensagem)}`;
       window.open(url, "_blank");
     }
 
-    function enviarWhatsApp() {
-      if (devedorAtual === null) return;
-      enviarMensagemWhatsApp(devedorAtual);
+    // Função 2 - Enviar somente o valor do débito
+    function enviarValorDebito(index) {
+      const devedores = carregarDevedores();
+      const d = devedores[index];
+
+      const totalProdutos = d.produtos ? d.produtos.reduce((acc, p) => acc + p.valor, 0) : 0;
+      const valorTotal = d.valor + totalProdutos;
+
+      const mensagem = `Olá, ${d.nome}!\nSeu débito atual com a Taurãcell Tech é de *R$ ${valorTotal.toFixed(2)}*.\n` +
+        `Por favor, entre em contato para regularizar sua situação.\n\n*Taurãcell Tech*`;
+
+      const url = `https://wa.me/55${d.numero}?text=${encodeURIComponent(mensagem)}`;
+      window.open(url, "_blank");
     }
 
+    // Função enviar lista pelo WhatsApp (produtos)
+    function enviarWhatsApp() {
+      if (devedorAtual === null) return;
+
+      const devedores = carregarDevedores();
+      const d = devedores[devedorAtual];
+
+      let mensagem = `*Produtos de ${d.nome}*\n\n`;
+
+      if (d.produtos && d.produtos.length) {
+        d.produtos.forEach(p => {
+          mensagem += `• ${p.nome} — R$ ${p.valor.toFixed(2)}\n`;
+        });
+      } else {
+        mensagem += "Nenhum produto adicionado.\n";
+      }
+
+      const url = `https://wa.me/55${d.numero}?text=${encodeURIComponent(mensagem)}`;
+      window.open(url, "_blank");
+    }
+
+    // Logout simples, limpa tudo e recarrega a página
     function logout() {
       if (confirm("Deseja realmente sair?")) {
-        // Exemplo simples: recarregar página ou redirecionar para login
+        localStorage.clear();
         location.reload();
       }
     }
