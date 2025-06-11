@@ -1,8 +1,6 @@
-<!-- login.html -->
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Login - Taurãcell Tech</title>
@@ -31,6 +29,7 @@
       border-radius: 10px;
       box-shadow: 0 0 10px #444;
       width: 300px;
+      position: relative;
     }
 
     input {
@@ -63,6 +62,43 @@
       color: #f44336;
       font-size: 0.9em;
     }
+
+    .forgot-link {
+      color: #f2d61f;
+      cursor: pointer;
+      font-size: 0.9em;
+      text-align: center;
+      margin-top: 10px;
+      text-decoration: underline;
+    }
+
+    /* Modal */
+    .modal-bg {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.7);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+    }
+
+    .modal {
+      background: #222;
+      border-radius: 10px;
+      padding: 20px;
+      width: 280px;
+      text-align: center;
+      color: #fcdf1f;
+      box-shadow: 0 0 15px #fcdf1f;
+    }
+
+    .modal button {
+      margin-top: 15px;
+      width: 100%;
+      background-color: #f44336;
+    }
+
   </style>
 </head>
 <body>
@@ -73,6 +109,15 @@
     <input type="password" id="senha" placeholder="Senha" />
     <button onclick="fazerLogin()">Entrar</button>
     <p class="error" id="mensagem-erro"></p>
+    <div class="forgot-link" onclick="abrirModal()">Esqueci usuário/senha</div>
+  </div>
+
+  <div class="modal-bg" id="modal-bg">
+    <div class="modal">
+      <h2>Esqueci usuário/senha</h2>
+      <p>Por favor, entre em contato com o administrador para recuperar seu acesso.</p>
+      <button onclick="fecharModal()">Fechar</button>
+    </div>
   </div>
 
   <script>
@@ -81,39 +126,22 @@
       const senha = document.getElementById("senha").value;
       const erro = document.getElementById("mensagem-erro");
 
-      // Você pode trocar essas credenciais por algo mais seguro depois
-      if (usuario === "admin" && senha === "1234") {
+      if (usuario === "ikaro" && senha === "tauratech") {
         localStorage.setItem("logado", "true");
         window.location.href = "lista-devedores.html";
       } else {
         erro.textContent = "Usuário ou senha incorretos.";
       }
     }
-    
+
+    function abrirModal() {
+      document.getElementById("modal-bg").style.display = "flex";
+    }
+
+    function fecharModal() {
+      document.getElementById("modal-bg").style.display = "none";
+    }
   </script>
+
 </body>
-<script type="module">
-  // Import the functions you need from the SDKs you need
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
-  import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-analytics.js";
-  // TODO: Add SDKs for Firebase products that you want to use
-  // https://firebase.google.com/docs/web/setup#available-libraries
-
-  // Your web app's Firebase configuration
-  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-  const firebaseConfig = {
-    apiKey: "AIzaSyBT7mRgveapgxKHgCGKJ6QcPCSF0AkHnRY",
-    authDomain: "lista-de-devedores.firebaseapp.com",
-    projectId: "lista-de-devedores",
-    storageBucket: "lista-de-devedores.firebasestorage.app",
-    messagingSenderId: "936162900731",
-    appId: "1:936162900731:web:bcc96d7ab0e152d58f4e5e",
-    measurementId: "G-KQPVC1JJ9Q"
-  };
-
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
-</script>
-
 </html>
