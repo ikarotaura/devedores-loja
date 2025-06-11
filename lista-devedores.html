@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Lista de Devedores - Taurãcell Tech</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Savate:ital,wght@0,200..900;1,200..900&display=swap"
+    rel="stylesheet" />
+  <style>
+    /* Reset básico */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: #121212;
+      color: #fff;
+      min-height: 100vh;
+      padding: 20px;
+      position: relative;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .header img {
+      height: 150px;
+      max-width: 100%;
+      object-fit: contain;
+    }
+
+    /* Parágrafo no lado direito - desktop */
+    .header p {
+      font-size: 1.2em;
+      color: rgb(206, 171, 17);
+      margin-left: auto;
+      text-align: right;
+      flex-shrink: 0;
+      max-width: 300px;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 25px;
+      font-weight: 700;
+      font-family: 'Savate', cursive;
+      color: #fcdf1f;
+    }
+
+    .form-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 25px;
+    }
+
+    .form-container input {
+      padding: 10px;
+      font-size: 1rem;
+      border-radius: 6px;
+      border: none;
+      outline: none;
+      width: 180px;
+      max-width: 100%;
+    }
+
+    .form-container button {
+      padding: 10px 20px;
+      background-color: #f2d61f;
+      border: none;
+      font-weight: 700;
+      color: #121212;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      flex-shrink: 0;
+    }
+
+    .form-container button:hover {
+      background-color: #e6c819;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+      word-break: break-word;
+    }
+
+    table th,
+    table td {
+      padding: 12px 10px;
+      border: 1px solid #3a1dca;
+      text-align: center;
+      font-size: 1rem;
+    }
+
+    table th {
+      background-color: #3c3aed;
+      color: #121212;
+      font-weight: 700;
+    }
+
+    .manage-products-button,
+    .remove-button {
+      margin: 2px;
+      padding: 6px 10px;
+      font-size: 0.85rem;
+      border-radius: 5px;
+      border: none;
+      cursor: pointer;
+    }
+
+    .manage-products-button {
+      background-color: #444;
+      color: white;
+      transition: background-color 0.3s;
+    }
+
+    .manage-products-button:hover {
+      background-color: #666;
+    }
+
+    .remove-button {
+      background-color: #f44336;
+      color: white;
+    }
+
+    .remove-button:hover {
+      background-color: #d32f2f;
+    }
+
+    .total-container {
+      font-size: 1.3rem;
+      font-weight: 700;
+      text-align: right;
+      margin-bottom: 20px;
+      color: #fcdf1f;
+      word-break: break-word;
+    }
+
+    /* Produtos modal/section */
+    .products-container {
+      background: #222;
+      border: 2px solid #fcdf1f;
+      padding: 15px;
+      border-radius: 10px;
+      max-width: 600px;
+      margin: 0 auto 30px;
+    }
+
+    .products-container h3 {
+      margin-bottom: 10px;
+      color: #fcdf1f;
+      text-align: center;
+    }
+
+    #lista-produtos {
+      list-style: none;
+      margin-bottom: 15px;
+    }
+
+    #lista-produtos li {
+      background: #333;
+      margin-bottom: 6px;
+      padding: 8px 12px;
+      border-radius: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    #lista-produtos li button {
+      background: #f44336;
+      border: none;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+      padding: 4px 8px;
+      font-weight: 700;
+    }
+
+    #lista-produtos li button:hover {
+      background: #d32f2f;
+    }
+
+    .products-container input {
+      padding: 8px;
+      width: calc(50% - 10px);
+      margin-bottom: 10px;
+      border-radius: 6px;
+      border: none;
+      font-size: 1rem;
+      max-width: 100%;
+    }
+
+    .products-container button {
+      padding: 8px 15px;
+      margin-right: 8px;
+      background-color: #fcdf1f;
+      border: none;
+      color: #121212;
+      border-radius: 6px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .products-container button:hover {
+      background-color: #e6c819;
+    }
+
+    .products-container button[style*="background-color: #f44336"] {
+      float: right;
+    }
+
+    /* Responsividade */
+    @media (max-width: 900px) {
+      .header {
+        flex-wrap: wrap;
+        justify-content: center;
+        text-align: center;
+      }
+
+      .header p {
+        position: static;
+        max-width: 100%;
+        margin-top: 10px;
+        text-align: center;
+      }
+    }
+
+    @media (max-width: 650px) {
+      .form-container {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .form-container input,
+      .form-container button {
+        width: 100%;
+        margin-bottom: 10px;
+      }
+
+      .products-container input {
+        width: 100%;
+      }
+
+      .products-container button[style*="float: right"] {
+        float: none;
+        display: block;
+        width: 100%;
+        margin-top: 10px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="header">
+    <img src="img/logo dourada.png" alt="Logo Taurãcell Tech" />
+    <p>⚙️Sistema de cobrança e ordem de serviço ⚙️</p>
+  </div>
+
+  <h1>Lista de Devedores - Taurãcell Tech</h1>
+
+  <div class="form-container">
+    <input type="text" id="nome" placeholder="Nome do Devedor" />
+    <input type="number" id="valor" placeholder="Valor devido" />
+    <input type="text" id="servico" placeholder="Serviço realizado" />
+    <input type="text" id="garantia" placeholder="Garantia (ex: 90 dias)" />
+    <input type="text" id="numero" placeholder="Número WhatsApp (ex: 11999999999)" maxlength="11" />
+    <button onclick="adicionarDevedor()">Adicionar Devedor</button>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Nome</th>
+        <th>Valor Devido (R$)</th>
+        <th>Serviço</th>
+        <th>Garantia</th>
+        <th>Produtos</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody id="tabela-devedores"></tbody>
+  </table>
+
+  <div class="total-container" id="total-devido">Total Devido: R$ 0.00</div>
+
+  <div class="products-container" id="products-container" style="display:none;">
+    <h3>Produtos do Devedor</h3>
+    <ul id="lista-produtos"></ul>
+    <input type="text" id="produto-nome" placeholder="Nome do Produto" />
+    <input type="number" id="produto-valor" placeholder="Valor do Produto" />
+    <div>
+      <button onclick="adicionarProduto()">Adicionar Produto</button>
+      <button onclick="fecharProdutos()">Fechar</button>
+      <button onclick="enviarWhatsApp()">📤 Enviar Lista pelo WhatsApp</button>
+      <button onclick="logout()" style="float: right; background-color: #f44336;">Sair</button>
+    </div>
+  </div>
+
+  <!-- JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script>
+    let devedorAtual = null;
+
+    function carregarDevedores() {
+      const devedoresSalvos = localStorage.getItem("devedores");
+      return devedoresSalvos ? JSON.parse(devedoresSalvos) : [];
+    }
+
+    function salvarDevedores(devedores) {
+      localStorage.setItem("devedores", JSON.stringify(devedores));
+    }
+
+    function atualizarTabela() {
+      const tabelaDevedores = document.getElementById("tabela-devedores");
+      tabelaDevedores.innerHTML = "";
+      const devedores = carregarDevedores();
+      let total = 0;
+
+      devedores.forEach((devedor, index) => {
+        const novaLinha = document.createElement("tr");
+
+        const colunaNome = document.createElement("td");
+        colunaNome.textContent = devedor.nome;
+        novaLinha.appendChild(colunaNome);
+
+        const colunaValor = document.createElement("td");
+        colunaValor.textContent = devedor.valor.toFixed(2);
+        novaLinha.appendChild(colunaValor);
+
+        const colunaServico = document.createElement("td");
+        colunaServico.textContent = devedor.servico || "—";
+        novaLinha.appendChild(colunaServico);
+
+        const colunaGarantia = document.createElement("td");
+        colunaGarantia.textContent = devedor.garantia || "—";
+        novaLinha.appendChild(colunaGarantia);
+
+        const colunaProdutos = document.createElement("td");
+        colunaProdutos.textContent = (devedor.produtos || []).length;
+        novaLinha.appendChild(colunaProdutos);
+
+        const colunaAcoes = document.createElement("td");
+
+        const botaoProdutos = document.createElement("button");
+        botaoProdutos.textContent = "Produtos";
+        botaoProdutos.className = "manage-products-button";
+        botaoProdutos.onclick = () => gerenciarProdutos(index);
+
+        const botaoWhats = document.createElement("button");
+        botaoWhats.textContent = "WhatsApp";
+        botaoWhats.className = "manage-products-button";
+        botaoWhats.style.backgroundColor = "#25D366";
+        botaoWhats.style.color = "white";
+        botaoWhats.style.marginLeft = "5px";
+        botaoWhats.onclick = () => enviarMensagemWhatsApp(index);
+
+        const botaoRemover = document.createElement("button");
+        botaoRemover.textContent = "Remover";
+        botaoRemover.className = "remove-button";
+        botaoRemover.onclick = () => {
+          if (confirm(`Remover ${devedor.nome} da lista?`)) {
+            removerDevedor(index);
+          }
+        };
+
+        colunaAcoes.appendChild(botaoProdutos);
+        colunaAcoes.appendChild(botaoWhats);
+        colunaAcoes.appendChild(botaoRemover);
+
+        novaLinha.appendChild(colunaAcoes);
+
+        tabelaDevedores.appendChild(novaLinha);
+
+        total += devedor.valor + (devedor.produtos ? devedor.produtos.reduce((acc, p) => acc + p.valor, 0) : 0);
+      });
+
+      document.getElementById("total-devido").textContent = `Total Devido: R$ ${total.toFixed(2)}`;
+    }
+
+    function adicionarDevedor() {
+      const nome = document.getElementById("nome").value.trim();
+      const valor = parseFloat(document.getElementById("valor").value);
+      const servico = document.getElementById("servico").value.trim();
+      const garantia = document.getElementById("garantia").value.trim();
+      const numero = document.getElementById("numero").value.trim();
+
+      if (!nome || isNaN(valor) || valor <= 0 || !numero.match(/^\d{10,11}$/)) {
+        alert("Preencha corretamente os campos: Nome, Valor e Número WhatsApp (10 ou 11 dígitos).");
+        return;
+      }
+
+      const devedores = carregarDevedores();
+
+      devedores.push({
+        nome,
+        valor,
+        servico,
+        garantia,
+        numero,
+        produtos: []
+      });
+
+      salvarDevedores(devedores);
+
+      document.getElementById("nome").value = "";
+      document.getElementById("valor").value = "";
+      document.getElementById("servico").value = "";
+      document.getElementById("garantia").value = "";
+      document.getElementById("numero").value = "";
+
+      atualizarTabela();
+    }
+
+    function removerDevedor(index) {
+      const devedores = carregarDevedores();
+      devedores.splice(index, 1);
+      salvarDevedores(devedores);
+      atualizarTabela();
+      fecharProdutos();
+    }
+
+    function gerenciarProdutos(index) {
+      const devedores = carregarDevedores();
+      devedorAtual = index;
+      mostrarProdutos(devedores[index]);
+    }
+
+    function mostrarProdutos(devedor) {
+      document.getElementById("products-container").style.display = "block";
+      atualizarListaProdutos(devedor.produtos || []);
+    }
+
+    function atualizarListaProdutos(produtos) {
+      const lista = document.getElementById("lista-produtos");
+      lista.innerHTML = "";
+      produtos.forEach((produto, idx) => {
+        const li = document.createElement("li");
+        li.textContent = `${produto.nome} — R$ ${produto.valor.toFixed(2)}`;
+        const btnRemover = document.createElement("button");
+        btnRemover.textContent = "X";
+        btnRemover.onclick = () => {
+          removerProduto(idx);
+        };
+        li.appendChild(btnRemover);
+        lista.appendChild(li);
+      });
+    }
+
+    function adicionarProduto() {
+      const nomeProd = document.getElementById("produto-nome").value.trim();
+      const valorProd = parseFloat(document.getElementById("produto-valor").value);
+      if (!nomeProd || isNaN(valorProd) || valorProd <= 0) {
+        alert("Preencha corretamente o nome e valor do produto.");
+        return;
+      }
+      const devedores = carregarDevedores();
+      if (devedorAtual === null || devedorAtual >= devedores.length) return;
+      const devedor = devedores[devedorAtual];
+      devedor.produtos = devedor.produtos || [];
+      devedor.produtos.push({ nome: nomeProd, valor: valorProd });
+      salvarDevedores(devedores);
+      atualizarListaProdutos(devedor.produtos);
+      document.getElementById("produto-nome").value = "";
+      document.getElementById("produto-valor").value = "";
+      atualizarTabela();
+    }
+
+    function removerProduto(idx) {
+      const devedores = carregarDevedores();
+      if (devedorAtual === null || devedorAtual >= devedores.length) return;
+      const devedor = devedores[devedorAtual];
+      devedor.produtos.splice(idx, 1);
+      salvarDevedores(devedores);
+      atualizarListaProdutos(devedor.produtos);
+      atualizarTabela();
+    }
+
+    function fecharProdutos() {
+      document.getElementById("products-container").style.display = "none";
+      devedorAtual = null;
+    }
+
+    function enviarMensagemWhatsApp(index) {
+      const devedores = carregarDevedores();
+      const d = devedores[index];
+      let mensagem = `*Olá, ${d.nome}!*\nVocê possui um débito com a Taurãcell Tech.\n\n*Detalhes:*\n- Valor devido: R$ ${d.valor.toFixed(2)}\n- Serviço: ${d.servico || "—"}\n- Garantia: ${d.garantia || "—"}`;
+      if (d.produtos && d.produtos.length) {
+        mensagem += `\n- Produtos:\n`;
+        d.produtos.forEach(p => {
+          mensagem += `  • ${p.nome} — R$ ${p.valor.toFixed(2)}\n`;
+        });
+      }
+      mensagem += `\nPor favor, entre em contato para regularizar sua situação.\n\n*Taurãcell Tech*`;
+      const url = `https://wa.me/55${d.numero}?text=${encodeURIComponent(mensagem)}`;
+      window.open(url, "_blank");
+    }
+
+    function enviarWhatsApp() {
+      if (devedorAtual === null) return;
+      enviarMensagemWhatsApp(devedorAtual);
+    }
+
+    function logout() {
+      if (confirm("Deseja realmente sair?")) {
+        // Exemplo simples: recarregar página ou redirecionar para login
+        location.reload();
+      }
+    }
+
+    atualizarTabela();
+  </script>
+</body>
+
+</html>
